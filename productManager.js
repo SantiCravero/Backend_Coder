@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+
 class Producto {
   constructor(title, description, price, thumbnail, code, stock) {
     this.title = title;
@@ -6,45 +8,109 @@ class Producto {
     this.thumbnail = thumbnail;
     this.code = code;
     this.stock = stock;
+    this.id = Producto.addId();
+  }
+
+  static addId() {
+    if (this.idIncrement) {
+      this.idIncrement++;
+    } else {
+      this.idIncrement = 1;
+    }
+    return this.idIncrement;
   }
 }
+
 class ProductManager {
-  constructor() {
-    this.products = [];
+  constructor(path) {
+    this.path = path;
   }
-  addProduct(newProduct) {
-    const productValues = Object.values(newProduct);
 
-    if (productValues.includes("") || productValues.includes(null)) {
-      console.log("Todos los campos deben estar completos para ingresar");
-    } else {
-      const prodCode = this.products.map((product) => product.code);
-      const prodExist = prodCode.includes(newProduct.code);
-
-      if (prodExist) {
-        console.log("Codigo ingresado ya existe, pruebe con otro codigo");
+  async addProduct(newProduct) {
+    try {
+      const validProduct = Object.values(newProduct);
+      if (validProduct.includes("") || validProduct.includes(null)) {
+        console.log("Todos los campos deben estar completos para ingresar");
       } else {
-        let id;
-        this.products.length === 0 ? (id = 1) : (id = this.products.length + 1);
-        const newObject = { ...newProduct, id };
-        this.products.push(newObject);
+        const read = await fs.readFile(this.path, "utf-8");
+        const data = JSON.parse(read);
+
+        const objCode = data.map((product) => product.code);
+        const objExist = objCode.includes(newProduct.code);
+
+        if (objExist) {
+          console.log("Codigo ingresado ya existe, pruebe con otro codigo");
+        } else {
+          data.push(newProduct);
+          await fs.writeFile(this.path, JSON.stringify(data), "utf-8");
+        }
       }
+    } catch (error) {
+      throw error;
     }
   }
 
-  getProducts() {
-    return this.products;
+  async getProducts() {
+    try {
+      const read = await fs.readFile(this.path, "utf8");
+      return JSON.parse(read);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  getProductById(id) {
-    const productId = this.products.find((producto) => producto.id === id);
-    if (productId) {
-      return productId
-    } else {
-      console.error("Not Found");
+  async getProductById(id) {
+    try {
+      const read = await fs.readFile(this.path, "utf-8");
+      const data = JSON.parse(read);
+      const productId = data.find((producto) => producto.id === id);
+      if (productId) {
+        return productId;
+      } else {
+        console.error("Producto no encontrado");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteProduct(id) {
+    try {
+      const read = await fs.readFile(this.path, "utf-8");
+      const data = JSON.parse(read);
+
+      const newData = data.filter((product) => product.id !== id);
+      await fs.writeFile(this.path, JSON.stringify(newData), "utf-8");
+      return console.log("El producto ha sido eliminado correctamente");
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateProduct(id, title, description, price, thumbnail, stock, code) {
+    try {
+      const read = await fs.readFile(this.path, "utf-8");
+      const data = JSON.parse(read);
+
+      if (data.some((producto) => producto.id === id)) {
+        let indice = data.findIndex(product => product.id === id)
+        data[indice].title = title
+        data[indice].description = description
+        data[indice].price = price
+        data[indice].thumbnail = thumbnail
+        data[indice].stock = stock
+        data[indice].code = code
+
+        await fs.writeFile(this.path, JSON.stringify(data))
+      } else {
+        console.log("Producto no encontrado")
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }
+
 
 const producto1 = new Producto(
   "DateJust 36",
@@ -64,31 +130,13 @@ const producto2 = new Producto(
   15
 );
 
-const productoVacio = new Producto("", "Relojes", 30, "No hay imagen", "", 10);
 
-const productManager = new ProductManager();
+// Creo el ProductManager
+const productManager = new ProductManager('./data.json');
 
-// 1. Muestro el listado de productos vacio
-console.log(productManager.getProducts());
+await productManager.addProduct(producto1);
+await productManager.addProduct(producto2);
 
+// await productManager.deleteProduct(2)
 
-// 2. Agrego los productos
-productManager.addProduct(producto1);
-productManager.addProduct(producto2);
-
-// 3. Intento agregar un producto con campos vacios (debe salir error: Todos los campos deben ser completos)
-productManager.addProduct(productoVacio);
-
-
-// 4. Vuelvo a ver el listado de productos con los mismos ya ingresados
-console.table(productManager.getProducts());
-
-
-// 5. Pruebo ingresar un producto ya existente (debe salir error: Codigo ya existente)
-productManager.addProduct(producto2);
-
-
-// 6. Busco un producto por su ID
-console.log(productManager.getProductById(1))
-// 7. Busco un producto por ID que no existe y sale error: Not Found
-productManager.getProductById(56);
+// await productManager.updateProduct(2, "aa", "aa", "aa", 0, 0, 0)
