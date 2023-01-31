@@ -8,16 +8,6 @@ class Producto {
     this.thumbnail = thumbnail;
     this.code = code;
     this.stock = stock;
-    this.id = Producto.addId();
-  }
-
-  static addId() {
-    if (this.idIncrement) {
-      this.idIncrement++;
-    } else {
-      this.idIncrement = 1;
-    }
-    return this.idIncrement;
   }
 }
 
@@ -41,7 +31,9 @@ class ProductManager {
         if (objExist) {
           console.log("Codigo ingresado ya existe, pruebe con otro codigo");
         } else {
-          data.push(newProduct);
+          let id;
+          data.length === 0 ? (id = 1) : (id = data[data.length - 1].id + 1);
+          data.push({ ...newProduct, id: id });
           await fs.writeFile(this.path, JSON.stringify(data), "utf-8");
         }
       }
@@ -52,7 +44,7 @@ class ProductManager {
 
   async getProducts() {
     try {
-      const read = await fs.readFile(this.path, "utf8");
+      const read = await fs.readFile(this.path, "utf-8");
       return JSON.parse(read);
     } catch (error) {
       throw error;
@@ -93,24 +85,23 @@ class ProductManager {
       const data = JSON.parse(read);
 
       if (data.some((producto) => producto.id === id)) {
-        let indice = data.findIndex(product => product.id === id)
-        data[indice].title = title
-        data[indice].description = description
-        data[indice].price = price
-        data[indice].thumbnail = thumbnail
-        data[indice].stock = stock
-        data[indice].code = code
+        let indice = data.findIndex((product) => product.id === id);
+        data[indice].title = title;
+        data[indice].description = description;
+        data[indice].price = price;
+        data[indice].thumbnail = thumbnail;
+        data[indice].stock = stock;
+        data[indice].code = code;
 
-        await fs.writeFile(this.path, JSON.stringify(data))
+        await fs.writeFile(this.path, JSON.stringify(data));
       } else {
-        console.log("Producto no encontrado")
+        console.log("Producto no encontrado");
       }
     } catch (error) {
       throw error;
     }
   }
 }
-
 
 const producto1 = new Producto(
   "DateJust 36",
@@ -130,13 +121,16 @@ const producto2 = new Producto(
   15
 );
 
+const producto3 = new Producto("holaaa", "aaaaa", 40000, "aasas", 313123, 1111);
 
 // Creo el ProductManager
-const productManager = new ProductManager('./data.json');
+const productManager = new ProductManager("./data.json");
 
 await productManager.addProduct(producto1);
 await productManager.addProduct(producto2);
 
-// await productManager.deleteProduct(2)
+// await productManager.deleteProduct(1)
 
 // await productManager.updateProduct(2, "aa", "aa", "aa", 0, 0, 0)
+
+// await productManager.addProduct(producto3);
