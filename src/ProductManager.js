@@ -121,16 +121,48 @@ const producto2 = new Producto(
   15
 );
 
-const producto3 = new Producto("holaaa", "aaaaa", 40000, "aasas", 313123, 1111);
+const producto3 = new Producto(
+    "GMT-Master",
+    "Reloj de oro",
+    70000,
+    "https://michaelkors.vercel.app/assets/watches/watch5.webp",
+    406,
+    5
+  );
+
+  const producto4 = new Producto(
+    "Air-King",
+    "Reloj para hombres",
+    20000,
+    "https://michaelkors.vercel.app/assets/watches/watch2.webp",
+    111,
+    11
+  );
+
+  const producto5 = new Producto(
+    "Cellini Moon",
+    "Reloj para mujeres",
+    10000,
+    "https://michaelkors.vercel.app/assets/watches/watch7.webp",
+    263,
+    20
+  );
+
 
 // Creo el ProductManager
 const productManager = new ProductManager("./data.json");
 
-await productManager.addProduct(producto1);
-await productManager.addProduct(producto2);
+// await productManager.addProduct(producto1);
+// await productManager.addProduct(producto2);
+// await productManager.addProduct(producto3);
+// await productManager.addProduct(producto4);
+// await productManager.addProduct(producto5);
 
 // await productManager.deleteProduct(1)
 
 // await productManager.updateProduct(2, "aa", "aa", "aa", 0, 0, 0)
 
 // await productManager.addProduct(producto3);
+
+
+export default ProductManager;
