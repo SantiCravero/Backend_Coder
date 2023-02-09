@@ -71,21 +71,23 @@ class ProductManager {
       const read = await fs.readFile(this.path, "utf-8");
       const data = JSON.parse(read);
 
-      const newData = data.filter((product) => product.id !== id);
-      await fs.writeFile(this.path, JSON.stringify(newData), "utf-8");
-      return console.log("El producto ha sido eliminado correctamente");
+      if (data.some((product) => product.id === parseInt(id))) {
+        const newData = data.filter((product) => product.id !== parseInt(id));
+        await fs.writeFile(this.path, JSON.stringify(newData), "utf-8");
+        return console.log("El producto ha sido eliminado correctamente");
+      }
     } catch (error) {
       throw error;
     }
   }
 
-  async updateProduct(id, title, description, price, thumbnail, stock, code) {
+  async updateProduct(id, { title, description, price, thumbnail, stock, code }) {
     try {
       const read = await fs.readFile(this.path, "utf-8");
       const data = JSON.parse(read);
 
-      if (data.some((producto) => producto.id === id)) {
-        let indice = data.findIndex((product) => product.id === id);
+      if (data.some((producto) => producto.id === parseInt(id))) {
+        let indice = data.findIndex((product) => product.id === parseInt(id));
         data[indice].title = title;
         data[indice].description = description;
         data[indice].price = price;
