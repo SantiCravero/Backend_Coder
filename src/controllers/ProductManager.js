@@ -1,12 +1,13 @@
 import { promises as fs } from "fs";
 
 class Producto {
-  constructor(title, description, price, thumbnail, code, stock) {
+  constructor(title, description, price, thumbnail, code, status, stock) {
     this.title = title;
     this.description = description;
     this.price = price;
     this.thumbnail = thumbnail;
     this.code = code;
+    this.status = status
     this.stock = stock;
   }
 }
@@ -81,7 +82,7 @@ class ProductManager {
     }
   }
 
-  async updateProduct(id, { title, description, price, thumbnail, stock, code }) {
+  async updateProduct(id, { title, description, price, thumbnail, stock, status, code }) {
     try {
       const read = await fs.readFile(this.path, "utf-8");
       const data = JSON.parse(read);
@@ -93,6 +94,7 @@ class ProductManager {
         data[indice].price = price;
         data[indice].thumbnail = thumbnail;
         data[indice].stock = stock;
+        data[indice].status = status;
         data[indice].code = code;
 
         await fs.writeFile(this.path, JSON.stringify(data));
@@ -111,6 +113,7 @@ const producto1 = new Producto(
   70000,
   "https://michaelkors.vercel.app/assets/watches/watch4.webp",
   246,
+  true,
   10
 );
 
@@ -120,6 +123,7 @@ const producto2 = new Producto(
   40000,
   "https://michaelkors.vercel.app/assets/watches/watch8.webp",
   359,
+  true,
   15
 );
 
@@ -129,6 +133,7 @@ const producto3 = new Producto(
     70000,
     "https://michaelkors.vercel.app/assets/watches/watch5.webp",
     406,
+    true,
     5
   );
 
@@ -138,6 +143,7 @@ const producto3 = new Producto(
     20000,
     "https://michaelkors.vercel.app/assets/watches/watch2.webp",
     111,
+    true,
     11
   );
 
@@ -147,24 +153,18 @@ const producto3 = new Producto(
     10000,
     "https://michaelkors.vercel.app/assets/watches/watch7.webp",
     263,
+    true,
     20
   );
 
 
 // Creo el ProductManager
-const productManager = new ProductManager("./data.json");
+// const productManager = new ProductManager("src/models/data.json");
 
 // await productManager.addProduct(producto1);
 // await productManager.addProduct(producto2);
 // await productManager.addProduct(producto3);
 // await productManager.addProduct(producto4);
 // await productManager.addProduct(producto5);
-
-// await productManager.deleteProduct(1)
-
-// await productManager.updateProduct(2, "aa", "aa", "aa", 0, 0, 0)
-
-// await productManager.addProduct(producto3);
-
 
 export default ProductManager;
