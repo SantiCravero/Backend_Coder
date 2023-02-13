@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductManager from "../controllers/ProductManager.js";
 
-const productManager = new ProductManager("src/models/data.json");
+const productManager = new ProductManager("src/models/products.json");
 
 const routerProduct = Router();
 
@@ -9,9 +9,9 @@ routerProduct.get("/", async (req, res) => {
   const products = await productManager.getProducts();
   let { limit } = req.query;
   if (limit) {
-    res.send(JSON.stringify(products.splice(0, limit)));
+    res.send(products.splice(0, limit));
   } else {
-    res.send(JSON.stringify(products));
+    res.send(products);
   }
 });
 

@@ -1,5 +1,6 @@
 import express from "express";
 import routerProduct from "./routes/products.routes.js";
+import routerCart from "./routes/cart.routes.js";
 import { __dirname } from "./path.js";
 import multer from "multer";
 
@@ -25,7 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/static', express.static(__dirname + '/public'))
+
 app.use('/api/products', routerProduct)
+app.use('/api/cart', routerCart)
 
 app.post('/upload', upload.single('product'), (req, res) => {
   console.log(req.body)

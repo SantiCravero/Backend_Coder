@@ -159,7 +159,7 @@ const producto3 = new Producto(
 
 
 // Creo el ProductManager
-// const productManager = new ProductManager("src/models/data.json");
+// const productManager = new ProductManager("src/models/products.json");
 
 // await productManager.addProduct(producto1);
 // await productManager.addProduct(producto2);
