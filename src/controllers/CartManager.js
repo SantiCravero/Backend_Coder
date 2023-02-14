@@ -36,12 +36,11 @@ class CartManager {
          let productCart = dataCart[cartIndex].products
          let productIndex = productCart.findIndex(product => product.id === idProduct)
          if(productIndex === -1) {
-            dataCart[cartIndex].products.push({product: idProduct, quantity: quantityProd})
-            await fs.writeFile(this.path, JSON.stringify(dataCart), 'utf-8')
+            dataCart[cartIndex].products.push({id: idProduct, quantity: quantityProd})
          } else {
             dataCart[cartIndex].products[productIndex].quantity += quantityProd
-            await fs.writeFile(this.path, JSON.stringify(dataCart), 'utf-8')
          }
+         await fs.writeFile(this.path, JSON.stringify(dataCart), 'utf-8')
       } else {
          return "El carrito seleccionado no existe"
       }

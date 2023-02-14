@@ -5,7 +5,7 @@ import ProductManager from "../controllers/ProductManager.js";
 const routerCart = Router()
 
 const cartManager = new CartManager('src/models/cart.json')
-const productManager = new ProductManager('src/models/productos.json')
+const productManager = new ProductManager('src/models/products.json')
 
 routerCart.post('/', async (req,res) => {
     let cart = await cartManager.createCart()
@@ -28,8 +28,7 @@ routerCart.post('/:idCart/product/:idProduct', async (req, res) => {
 
     if(dataProduct) {
         const data = await cartManager.addProductToCart(idCart, idProduct, quantityProd)
-        res.send(data)
-        // data ? res.send(`Producto ${dataProduct.id} agregado al carrito.`) : res.send(`Hubo un error al agregar el producto al carrito.`)
+        res.send(`Producto ${dataProduct.id} agregado al carrito.`)
     } else {
         res.send(`El producto ${idProduct} no se ha encontrado`)
     }
