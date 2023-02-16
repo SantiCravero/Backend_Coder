@@ -34,8 +34,4 @@ routerCart.post('/:idCart/product/:idProduct', async (req, res) => {
     }
 })
 
-
-
-
-
 export default routerCart
