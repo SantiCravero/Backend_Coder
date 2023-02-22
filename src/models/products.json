@@ -20,16 +20,6 @@
     "id": 2
   },
   {
-    "title": "reloj prueba",
-    "description": "reloj prueba",
-    "price": 400,
-    "thumbnail": "no hay",
-    "code": 3020,
-    "status": true,
-    "stock": 1,
-    "id": 3
-  },
-  {
     "title": "Air-King",
     "description": "Reloj para hombres",
     "price": 20000,
@@ -48,5 +38,14 @@
     "status": true,
     "stock": 20,
     "id": 5
+  },
+  {
+    "title": "Reloj de prueba servidor",
+    "description": "server",
+    "price": "10000",
+    "thumbnail": "https://content.rolex.com/dam/2022-11/upright-bba-with-shadow/m126067-0001.png?imwidth=840",
+    "code": "21021201",
+    "stock": "3",
+    "id": 6
   }
 ]
