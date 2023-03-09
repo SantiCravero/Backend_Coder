@@ -2,11 +2,13 @@ import express from "express";
 import routerProduct from "./routes/products.routes.js";
 import routerCart from "./routes/cart.routes.js";
 import routerSocket from "./routes/socket.routes.js";
+import routerUser from "./routes/users.routes.js";
 import { __dirname } from "./path.js";
 import multer from "multer";
 import { engine } from "express-handlebars";
 import * as path from 'path'
 import { Server } from "socket.io";
+import mongoose from "mongoose";
 
 import ProductManager from "./controllers/ProductManager.js";
 const productManager = new ProductManager('src/models/products.json')
@@ -39,6 +41,11 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", path.resolve(__dirname, "./views"));   // __dirname + views
+
+
+mongoose.connect("mongodb+srv://santicravero:coderhouse@cluster0.253qbi3.mongodb.net/?retryWrites=true&w=majority")
+  .then(() => console.log("DB Conectado"))
+  .catch(error => console.log("Error en conexion MongoDB Atlas", error))
 
 // ServerIO
 const io = new Server(server)
@@ -74,6 +81,7 @@ app.use("/", express.static(__dirname + "/public"));
 app.use("/api/products", routerProduct);
 app.use("/api/cart", routerCart);
 app.use("/", routerSocket)
+app.use("/users", routerUser)
 
 app.post("/upload", upload.single("product"), (req, res) => {
   console.log(req.body);
